@@ -123,9 +123,35 @@ Expected output ends with something like `ok` and the process exits 0.
 Failure modes:
 
 - `not signed in` / `unauthorized` → repeat Step 2
+- `refresh token was revoked` → the OAuth session expired or was
+  invalidated; user must re-run `codex login` in a real terminal
 - `not in a git repo` → cd is wrong; fix and retry
 - `command not found: codex` → install.sh didn't finish, or npm
   global bin isn't on PATH (`npm config get prefix`)
+- `You've hit your usage limit` → ChatGPT Codex quota exhausted on
+  this account. Wait until the time given in the error, or
+  upgrade Plus→Pro, or set `OPENAI_API_KEY` to use API billing.
+
+### Step 4.5: Optional — install bubblewrap
+
+On Linux, Codex uses `bubblewrap` for sandbox isolation. If not on
+PATH, Codex prints a warning and falls back to its bundled copy
+(works fine, but warns every run). Cleaner:
+
+```bash
+# Debian / Ubuntu
+sudo apt install -y bubblewrap
+
+# Arch
+sudo pacman -S bubblewrap
+
+# Fedora
+sudo dnf install -y bubblewrap
+```
+
+macOS: not needed (no bubblewrap warning on darwin).
+
+This is optional. Skip if the user is on a shared host without sudo.
 
 ### Step 5: Install the Hermes fleet skill
 

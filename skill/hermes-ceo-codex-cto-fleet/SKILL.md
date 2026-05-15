@@ -172,6 +172,28 @@ Sandbox table:
 Open `.agents/last_report.md`. Verify all 6 sections are present.
 Missing sections = automatic reject (the constraint was clear).
 
+**BEFORE you reject, diagnose.** `codex exec` exiting non-zero with a
+malformed report is often infra, not Codex doing a bad job. Check the
+LAST 20 lines of `.agents/last_report.md`:
+
+```bash
+tail -20 .agents/last_report.md
+```
+
+Look for these signatures and route accordingly:
+
+| Signature in last_report.md                          | Cause                              | Fix                                                  |
+|------------------------------------------------------|------------------------------------|------------------------------------------------------|
+| `You've hit your usage limit. ... try again at HH:MM` | ChatGPT Codex quota exhausted      | Wait, upgrade Plus→Pro, or set `OPENAI_API_KEY`     |
+| `refresh token was revoked` / `401 Unauthorized`     | OAuth session dead                 | User runs `codex login` again in a real terminal     |
+| `Codex could not find bubblewrap on PATH` (warn only) | Optional sandbox tool missing      | `apt install bubblewrap` (cosmetic — runs continue)  |
+| `not in a git repo`                                  | cwd outside a worktree             | cd into the repo, retry                              |
+| Empty report / killed mid-run                        | Network drop, timeout, OOM         | Check Hermes terminal logs, retry                    |
+| `command not found: codex`                           | npm bin not on PATH                | `npm config get prefix` → add `$PREFIX/bin` to PATH  |
+
+If the report has all 6 sections AND has a real PLAN / CHANGED FILES,
+proceed to Step 7. Only the CODE was bad → tighten handoff + re-run.
+
 ### 7. Run the acceptance checklist
 
 Each unchecked item is grounds for revision. Reject = rewrite the
@@ -399,6 +421,12 @@ skill instead of cron.
 12. **Worktree cleanup forgotten.** Stale worktrees + branches
     accumulate. After merging each PR, remove the worktree and branch.
 
+13. **Treating infra failures as code failures.** `codex exec` exit
+    code 1 with an empty/short last_report.md is almost always infra
+    (quota, revoked OAuth token, network). Use the diagnosis table
+    in Step 6 BEFORE rewriting the handoff. Don't waste handoff
+    iterations on infra problems.
+
 ## Verification Checklist (per task, before "accepted")
 
 - [ ] Preconditions all green
@@ -448,3 +476,14 @@ skill instead of cron.
    "Minimal diff. Touch ONLY <specific files>. Reject any change to
    <other paths>."
 4. `git reset --hard HEAD` and re-run from clean state
+
+### "codex exec just failed — is it code or infra?"
+1. `tail -20 .agents/last_report.md`
+2. Cross-reference the Step-6 diagnosis table.
+3. If infra → fix that and retry the SAME handoff (no edits).
+4. If code → run the 8-item acceptance checklist; if it fails,
+   tighten the handoff and re-run.
+5. Common: "usage limit" = ChatGPT quota → wait or set
+   `OPENAI_API_KEY` to switch to API billing for this session.
+6. Common: "refresh token revoked" = OAuth dead → tell the user to
+   run `codex login` themselves (browser flow; Hermes can't do it).
