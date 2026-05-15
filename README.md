@@ -45,6 +45,7 @@ Two skills, separated by role:
 |----------------------------------|-------------------------------------------------------|
 | `hermes-ceo-codex-cto-install`   | First-time bootstrap of the pattern in a repo         |
 | `hermes-ceo-codex-cto-fleet`     | Day-to-day: delegate, parallel worktrees, cron, review |
+| `openrouter-image-generation`    | Generate images through OpenRouter and save PNGs locally |
 | `n-slide-deck-goal-template`     | Copy-paste /goal template for generating N-slide decks with OpenRouter images |
 
 Install the CEO/CTO skills:
@@ -60,10 +61,12 @@ cp -r ~/Hermes-CEO/skill/hermes-ceo-codex-cto-install \
       ~/.hermes/skills/orchestration/
 ```
 
-Optional deck-generation prompt skill:
+Optional image-generation + deck-generation prompt skills:
 
 ```bash
-cp -r ~/Hermes-CEO/skill/n-slide-deck-goal-template \
+mkdir -p ~/.hermes/skills/creative
+cp -r ~/Hermes-CEO/skill/openrouter-image-generation \
+      ~/Hermes-CEO/skill/n-slide-deck-goal-template \
       ~/.hermes/skills/creative/
 ```
 
