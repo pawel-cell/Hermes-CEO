@@ -234,8 +234,8 @@ cat <<EOF
   3. Open ${C}AGENTS.md${R} and replace every <placeholder> with your stack/commands.
 
   4. In Hermes, say:
-        ${C}"Load the hermes-ceo-codex-cto skill and run the delegation loop in $REPO_ROOT"${R}
-     (After installing the skill — see README.md → "Install the Hermes skill")
+        ${C}"Load the hermes-ceo-codex-cto-fleet skill and run a task in $REPO_ROOT"${R}
+     (After installing the skills — see README.md → "Install the Hermes skills")
 
   5. For your first task, edit ${C}.agents/CTO_HANDOFF.md${R} with a real CTO_GOAL,
      then either ask Hermes to run it, or test manually:

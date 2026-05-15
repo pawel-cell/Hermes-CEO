@@ -36,23 +36,37 @@ codex exec --sandbox workspace-write "$(cat .agents/CTO_HANDOFF.md)" \
 
 That's the manual loop. The Hermes skill below automates it.
 
-## Install the Hermes skill
+## Install the Hermes skills
 
-Lets you say _"set up Hermes-CEO in this repo"_ or _"delegate this fix
-to Codex"_ and Hermes will follow the protocol with the right pauses.
+Two skills, separated by role:
+
+| Skill                            | Use when                                              |
+|----------------------------------|-------------------------------------------------------|
+| `hermes-ceo-codex-cto-install`   | First-time bootstrap of the pattern in a repo         |
+| `hermes-ceo-codex-cto-fleet`     | Day-to-day: delegate, parallel worktrees, cron, review |
+
+Install both:
 
 ```bash
 # Clone this repo somewhere
 git clone https://github.com/pawel-cell/Hermes-CEO.git ~/Hermes-CEO
 
-# Drop the skill into your Hermes skill tree
+# Drop both skills into your Hermes skill tree
 mkdir -p ~/.hermes/skills/orchestration
-cp -r ~/Hermes-CEO/skill ~/.hermes/skills/orchestration/hermes-ceo-codex-cto
+cp -r ~/Hermes-CEO/skill/hermes-ceo-codex-cto-install \
+      ~/Hermes-CEO/skill/hermes-ceo-codex-cto-fleet \
+      ~/.hermes/skills/orchestration/
 ```
 
-Then start a fresh Hermes session (skills load at session start). Say:
+Then start a fresh Hermes session (skills load at session start).
 
-> Load the `hermes-ceo-codex-cto` skill and set it up in `/path/to/my/repo`
+**First time in a repo:**
+
+> Load `hermes-ceo-codex-cto-install` and set it up in `/path/to/my/repo`
+
+**Every time after that:**
+
+> Load `hermes-ceo-codex-cto-fleet` and delegate this task to Codex: ...
 
 ## What you get
 
@@ -101,11 +115,12 @@ configure — auth stores are separate, quota is per-account.
 
 ## Repo contents
 
-| File           | Purpose                                                  |
-|----------------|----------------------------------------------------------|
-| `GUIDEBOOK.md` | Full protocol: templates, delegation loop, parallelism   |
-| `install.sh`   | Bootstrapper — preflight + Codex install + scaffolding   |
-| `skill/SKILL.md` | Hermes skill that automates the loop                   |
+| File                                   | Purpose                                                  |
+|----------------------------------------|----------------------------------------------------------|
+| `GUIDEBOOK.md`                         | Full protocol: templates, delegation loop, parallelism   |
+| `install.sh`                           | Bootstrapper — preflight + Codex install + scaffolding   |
+| `skill/hermes-ceo-codex-cto-install/`  | Hermes skill: first-time bootstrap                       |
+| `skill/hermes-ceo-codex-cto-fleet/`    | Hermes skill: day-to-day fleet operations                |
 
 ## License
 
