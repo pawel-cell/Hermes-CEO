@@ -244,3 +244,42 @@ cat <<EOF
 Read GUIDEBOOK.md (https://github.com/pawel-cell/Hermes-CEO/blob/main/GUIDEBOOK.md)
 for the full protocol.
 EOF
+
+# ── 5. Known friction (read this before you launch codex) ────────────
+printf "\n%s%s%s\n" "$B" "════ KNOWN FRICTION — read before launching codex ════" "$R"
+cat <<EOF
+${Y}ONE CODEX AT A TIME, EVER.${R}
+  Codex uses ChatGPT OAuth. Refresh tokens are single-use. If two
+  codex processes refresh in parallel, both get logged out with
+  ${X}refresh_token_reused${R} and you'll need to ${C}codex logout && codex login${R}
+  to recover. Before launching ANY codex run (interactive or exec):
+
+      ${C}pkill codex 2>/dev/null; sleep 1${R}
+      ${C}ps -ef | grep -v grep | grep codex${R}    # must print nothing
+
+  This includes leftover ${C}codex --yolo${R} TUI sessions in other tabs,
+  cron-spawned codex jobs, and parallel-worktree codex processes on
+  the same machine. Worktrees let you parallelize ${B}files${R}, not auth.
+
+${Y}RATE LIMITS ARE PLAN-CAPACITY, NOT PROMPT-LENGTH.${R}
+  ChatGPT Plus has a finite per-window token budget. Long "read all
+  these files first" prompts burn budget fast. Prefer surgical handoffs
+  (CTO_GOAL + 2-3 specific files + Done-when) over context dumps.
+  Codex Pro gives ~5× more headroom if you hit the limit often.
+
+${Y}SILENT HANGS HAPPEN.${R}
+  If codex exec sits at zero output growth for >5 min AND ${C}ss -tnp${R}
+  shows no :443 connection from its pid AND ${C}ps${R} shows CPU time
+  =00:00:00, it's dead. Kill it (${C}kill -9${R}) and retry. No graceful
+  recovery — codex doesn't surface the network error.
+
+${Y}IF YOUR REPO TASK IS <200 LINES / <4 FILES, DON'T DELEGATE.${R}
+  Codex orchestration has overhead (auth, rate limits, sandbox boot,
+  model latency). For tiny tasks just edit yourself or have your CEO
+  agent do it directly. The fleet skill's "When to abandon delegation"
+  section is canon.
+
+Full failure-mode reference:
+  https://github.com/pawel-cell/Hermes-CEO/blob/main/GUIDEBOOK.md#known-friction
+EOF
+
