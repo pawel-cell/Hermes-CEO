@@ -45,8 +45,9 @@ Two skills, separated by role:
 |----------------------------------|-------------------------------------------------------|
 | `hermes-ceo-codex-cto-install`   | First-time bootstrap of the pattern in a repo         |
 | `hermes-ceo-codex-cto-fleet`     | Day-to-day: delegate, parallel worktrees, cron, review |
+| `n-slide-deck-goal-template`     | Copy-paste /goal template for generating N-slide decks with OpenRouter images |
 
-Install both:
+Install the CEO/CTO skills:
 
 ```bash
 # Clone this repo somewhere
@@ -57,6 +58,13 @@ mkdir -p ~/.hermes/skills/orchestration
 cp -r ~/Hermes-CEO/skill/hermes-ceo-codex-cto-install \
       ~/Hermes-CEO/skill/hermes-ceo-codex-cto-fleet \
       ~/.hermes/skills/orchestration/
+```
+
+Optional deck-generation prompt skill:
+
+```bash
+cp -r ~/Hermes-CEO/skill/n-slide-deck-goal-template \
+      ~/.hermes/skills/creative/
 ```
 
 Then start a fresh Hermes session (skills load at session start).
