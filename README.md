@@ -31,6 +31,7 @@ $EDITOR CEO_GOAL.md     # business objective + current milestone
 # 4. Write your first task and run it
 $EDITOR .agents/CTO_HANDOFF.md
 codex exec --sandbox workspace-write "$(cat .agents/CTO_HANDOFF.md)" \
+  < /dev/null \
   > .agents/last_report.md 2>&1
 ```
 

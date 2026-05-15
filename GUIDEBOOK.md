@@ -97,7 +97,7 @@ Hermes background terminal pattern:
 
     terminal(background=true, notify_on_complete=true,
              workdir="/abs/path/app-auth",
-             command="codex exec --sandbox workspace-write \"$(cat .agents/CTO_HANDOFF.md)\" > .agents/last_report.md")
+             command="codex exec --sandbox workspace-write \"$(cat .agents/CTO_HANDOFF.md)\" < /dev/null > .agents/last_report.md")
 
 When both finish, Hermes reads each last_report.md, opens a PR per branch,
 and updates Kanban.

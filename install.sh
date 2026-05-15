@@ -239,7 +239,7 @@ cat <<EOF
 
   5. For your first task, edit ${C}.agents/CTO_HANDOFF.md${R} with a real CTO_GOAL,
      then either ask Hermes to run it, or test manually:
-        ${C}codex exec --sandbox workspace-write "\$(cat .agents/CTO_HANDOFF.md)"${R}
+        ${C}codex exec --sandbox workspace-write "\$(cat .agents/CTO_HANDOFF.md)" < /dev/null${R}
 
 Read GUIDEBOOK.md (https://github.com/pawel-cell/Hermes-CEO/blob/main/GUIDEBOOK.md)
 for the full protocol.
