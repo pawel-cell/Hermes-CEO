@@ -11,6 +11,8 @@ in any git repo.
 
 Full protocol → [`GUIDEBOOK.md`](./GUIDEBOOK.md)
 
+/goal + Codex fleet playbook → [`goal-codex-guide.md`](./goal-codex-guide.md)
+
 ## Quick start
 
 Prerequisites: a real terminal, Node.js 18+, git, an active ChatGPT
