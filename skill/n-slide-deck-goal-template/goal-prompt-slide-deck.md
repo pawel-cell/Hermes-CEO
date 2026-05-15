@@ -1,75 +1,65 @@
----
-name: n-slide-deck-goal-template
-description: Universal copy-paste /goal prompt template for producing an N-slide 16:9 deck with OpenRouter image generation, using slide 1 as the visual anchor and generating slides 2..N in parallel.
-version: 1.0.0
-author: pawel-cell
-license: MIT
-metadata:
-  hermes:
-    tags: [presentations, slide-deck, goal, openrouter, image-generation]
-    related_skills: [openrouter-image-generation]
----
-
 # /goal Prompt — N-Slide Deck Universal Template
 
-This skill provides a clean Markdown copy of the universal `/goal` prompt for producing an N-slide 16:9 deck with OpenRouter image generation.
+Fill in the `[BRACKETED]` fields, then copy-paste the `/goal` block into a Hermes CLI session.
 
-Open or copy the template file:
+## Fill these in first
 
 ```text
-skill/n-slide-deck-goal-template/goal-prompt-slide-deck.md
+[TOPIC]        → what the deck is about, e.g. "Hermes Agents"
+[N]            → number of slides, e.g. 5
+[N-1]          → [N] minus one; count of slides 2..N
+[OUTPUT_DIR]   → absolute output path, e.g.
+                 ~/Downloads/Deliverables/2026-05-15-video/deck/
+[IMAGE_MODEL]  → image model string. Use ONE of the following only:
+                 - google/gemini-3.1-flash-image-preview
+                 - openai/gpt-5.4-image-2
 ```
 
-## Quick setup reminder
+## Required setup before pasting the `/goal` line
 
-Before using the prompt:
+1. You must install the OpenRouter image generation skill first. This `/goal` will fail without it.
 
-1. Install `openrouter-image-generation`.
-2. Export `OPENROUTER_API_KEY`.
-3. Attach the reference design image before pasting the `/goal` text.
-
-The full copy-paste prompt lives in `goal-prompt-slide-deck.md`.
-
-## Included prompt
-
-──────────────────────────────────────────────────────────────────────
-Required setup before pasting the /goal line
-──────────────────────────────────────────────────────────────────────
-
-1. Install the OpenRouter image generation skill first.
-   This `/goal` will fail without it.
-
+   ```bash
    hermes skills install openrouter-image-generation
+   ```
 
-   Or, if you have the SKILL.md file locally:
+   Or, if you have the `SKILL.md` file locally:
 
+   ```bash
    hermes skills install file:///absolute/path/to/SKILL.md
+   ```
 
    If you have it via URL:
 
+   ```bash
    hermes skills install https://path/to/SKILL.md
+   ```
 
    Verify it loaded:
 
+   ```bash
    hermes skills list | grep openrouter-image-generation
+   ```
 
 2. Export your OpenRouter API key in the same shell:
 
+   ```bash
    export OPENROUTER_API_KEY=sk-or-v1-...
+   ```
 
-3. Attach the reference design image to the chat BEFORE pasting the `/goal` line.
+3. Attach the reference design image to the chat before pasting the `/goal` line.
 
-   In the CLI:
+   CLI:
 
+   ```text
    /image /path/to/reference.png
+   ```
 
-   In a messaging gateway: drop the image as an attachment, then send the `/goal` text in the next message.
+   Messaging gateway: drop the image as an attachment, then send the `/goal` text in the next message.
 
 If you skip step 1, the agent may try to generate images with the wrong tool, hallucinate `/mnt/data/` paths, or burn turns figuring it out. Do not skip step 1.
 
-──────────────────────────────────────────────────────────────────────
-Copy everything below this line into Hermes
-──────────────────────────────────────────────────────────────────────
+## Copy everything below this line into Hermes
 
 ```text
 /goal You are a senior presentation designer. Produce a complete
@@ -151,12 +141,12 @@ MEDIA: tags — this is the CLI. Do not declare success until every file
 passes the `file` check.
 ```
 
-──────────────────────────────────────────────────────────────────────
-Why this works
-──────────────────────────────────────────────────────────────────────
+## Why this works
 
-- `/goal` keeps Hermes running across turns until all [N] PNGs land. No babysitting, no "continue" loops.
-- Slide 1 first establishes the look. The next [N-1] prompts copy slide 1's style language, which creates a design system from a single anchor.
+Do not paste this part into Hermes; it is reference context only.
+
+- `/goal` keeps Hermes running across turns until all `[N]` PNGs land. No babysitting, no "continue" loops.
+- Slide 1 first establishes the look. The next `[N-1]` prompts copy slide 1's style language, creating a design system from a single anchor.
 - Slides 2-[N] fan out in parallel because image generation is I/O-bound and the OpenRouter API is safe for this concurrency pattern.
 - Hard, file-grep-able goal criteria let the judge model decide "done" without hallucinating.
 - Mandatory skill load blocks the most common failure mode: wrong tool path, fake file paths, and missing output files.
