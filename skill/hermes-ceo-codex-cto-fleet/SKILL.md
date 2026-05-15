@@ -1,6 +1,6 @@
 ---
 name: hermes-ceo-codex-cto-fleet
-description: Use when the user wants to operate the Hermes CEO / Codex CTO pattern day-to-day — delegating one or many engineering tasks to Codex, running parallel coding agents across git worktrees, scheduling recurring Codex jobs via cron, reviewing reports against the acceptance checklist, or coordinating a fleet of background coding agents. Assumes the install skill (hermes-ceo-codex-cto-install) has already run successfully in the target repo.
+description: Use when the user wants to operate the Hermes CEO / Codex CTO pattern day-to-day — delegating one or many engineering tasks to Codex, running parallel coding agents across git worktrees, opening or managing a persistent /goal + /subgoal CEO mission, scheduling recurring Codex jobs via cron, reviewing reports against the acceptance checklist, or coordinating a fleet of background coding agents. Assumes the install skill (hermes-ceo-codex-cto-install) has already run successfully in the target repo.
 version: 1.0.0
 author: pawel-cell
 license: MIT
@@ -35,6 +35,9 @@ Load this skill when the user says any of:
 - "schedule a nightly Codex test-and-fix"
 - "what's the status of the coding agents I started?"
 - "kill the running Codex job in repo X"
+- "open a persistent CEO mission with /goal + /subgoal"
+- "add an acceptance criterion to the active goal"
+- "show me the current /goal and subgoals"
 
 Don't use for:
 
@@ -250,6 +253,70 @@ Never let Codex decide merge order. That's a CEO decision.
 git worktree remove ../<repo>-auth   # after PR merged
 git branch -d codex/auth-rate-limit
 ```
+
+## Persistent Missions: `/goal` + `/subgoal`
+
+For CEO-level missions that span multiple Codex delegations, use
+Hermes's persistent goal system instead of one-shot prompts.
+
+`/goal` = the CEO mission. Hermes keeps working across turns and uses a
+judge model to decide when the goal is satisfied.
+
+`/subgoal` = acceptance criteria layered onto the active goal. Adds
+requirements without resetting. Signature: `/subgoal [text | remove N | clear]`.
+
+### Template: CEO mission with strict CTO contract
+
+Open the mission:
+
+```
+/goal Act as CEO. Deliver the next engineering milestone in <repo> by
+delegating implementation to Codex CTO, reviewing each result against
+the acceptance checklist, and deciding accept/reject.
+```
+
+Then layer the contract:
+
+```
+/subgoal CTO_HANDOFF must include CTO_GOAL, repo path, constraints, and Done-when.
+/subgoal Codex must produce a minimal diff and avoid unrelated refactors.
+/subgoal Codex must run the test/lint/typecheck commands from AGENTS.md and report exact pass/fail counts.
+/subgoal Each Codex report must contain all 6 required sections (PLAN, CHANGED FILES, TESTS RUN, FAILING TESTS, RISKS, NEXT).
+/subgoal Hermes must run the 8-item acceptance checklist before accepting any report.
+/subgoal Final mission summary must list: accepted PRs, rejected attempts with reasons, remaining risks, next CTO task.
+```
+
+The judge will refuse vague "all done" claims — it requires concrete
+evidence (file paths, command output, test counts). That's exactly
+what the 6-section report contract produces, so the pieces fit.
+
+### When to add subgoals mid-flight
+
+- A Codex report came back with "tests pass" but no test counts →
+  `/subgoal Test reports must include the exact runner output with pass/fail counts.`
+- Codex changed unrelated files → `/subgoal Diffs touching files outside the handoff's "Files likely involved" list must be reverted before reporting.`
+- A new business constraint came up → `/subgoal No changes to public API surface in src/api/v1/ until milestone X ships.`
+
+### Inspect / clean up
+
+```
+/subgoal                # show current goal + numbered subgoals
+/subgoal remove 3       # drop the 3rd criterion
+/subgoal clear          # keep main /goal, drop all criteria
+```
+
+### Pitfalls specific to /subgoal
+
+- **Subgoals are not delegation.** `/subgoal` does NOT spawn Codex.
+  It only modifies the acceptance contract for the active `/goal`.
+  Still call `codex exec` (or the parallel-worktree pattern) to do work.
+- **Don't pack implementation into subgoals.** Subgoals are criteria,
+  not tasks. "Codex must implement X" belongs in CTO_HANDOFF.md.
+- **One mission per `/goal`.** New product mission? New `/goal`.
+  Don't pile unrelated subgoals onto an old goal.
+- **Subgoals are persistent across turns.** Use `/subgoal clear`
+  before starting a different mission, or the judge will keep checking
+  stale criteria.
 
 ## Recurring Work: Cron Jobs
 

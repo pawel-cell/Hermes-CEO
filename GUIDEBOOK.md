@@ -275,3 +275,45 @@ quota is per-account.
   Hermes decides WHETHER the result is accepted.
 
 If any of those three roles blur, stop and re-read CEO_GOAL.md.
+
+──────────────────────────────────────────────────────────────────────
+11. PERSISTENT MISSIONS — /goal + /subgoal
+──────────────────────────────────────────────────────────────────────
+
+Hermes ships two slash commands that turn the CEO loop into something
+the judge model can verify across many turns:
+
+  /goal <text>                 → opens a persistent CEO mission.
+                                 Hermes keeps working until done,
+                                 paused, cleared, or budget exhausted.
+
+  /subgoal <text>              → adds one acceptance criterion to the
+                                 active /goal.
+  /subgoal                     → list current goal + subgoals.
+  /subgoal remove N            → drop criterion N (1-indexed).
+  /subgoal clear               → wipe subgoals, keep main /goal.
+
+Use /goal for the mission, /subgoal for acceptance criteria. Do NOT
+use /subgoal as delegation — it does not call Codex.
+
+Recommended opening at the start of a milestone:
+
+    /goal Act as CEO. Deliver milestone <X> in <REPO_ROOT> by delegating
+    implementation to Codex CTO, reviewing each result against the
+    acceptance checklist, and deciding accept/reject.
+
+    /subgoal CTO_HANDOFF must include CTO_GOAL, repo path, constraints, and Done-when.
+    /subgoal Codex must produce a minimal diff and avoid unrelated refactors.
+    /subgoal Codex must run the test/lint/typecheck commands from AGENTS.md and report exact pass/fail counts.
+    /subgoal Each Codex report must contain all 6 sections (PLAN, CHANGED FILES, TESTS RUN, FAILING TESTS, RISKS, NEXT).
+    /subgoal Hermes must run the 8-item acceptance checklist before accepting any report.
+    /subgoal Final mission summary must list: accepted PRs, rejected attempts with reasons, remaining risks, next CTO task.
+
+When Codex returns a vague report mid-mission, add a /subgoal that
+demands the missing evidence. The judge will refuse "done" until the
+new criterion is satisfied.
+
+The augmented rule: **/goal = CEO mission. /subgoal = CEO acceptance
+criteria. Codex = CTO executor. Hermes should not mark the mission
+done until the main goal and every /subgoal criterion have concrete
+evidence (file paths, command output, test counts).**

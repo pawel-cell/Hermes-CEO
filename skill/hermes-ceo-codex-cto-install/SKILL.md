@@ -1,6 +1,6 @@
 ---
 name: hermes-ceo-codex-cto-install
-description: Use when the user wants to install or bootstrap the Hermes CEO / Codex CTO toolchain into a repo for the first time — running install.sh, getting codex logged in, filling in AGENTS.md and CEO_GOAL.md placeholders, and verifying the codex exec sandbox actually works. After install completes successfully, hand off to the hermes-ceo-codex-cto-fleet skill for ongoing operations.
+description: Use when the user wants to install or bootstrap the Hermes CEO / Codex CTO toolchain into a repo for the first time — running install.sh, getting codex logged in, filling in AGENTS.md and CEO_GOAL.md placeholders, verifying the codex exec sandbox actually works, and optionally opening the initial /goal + /subgoal mission. After install completes successfully, hand off to the hermes-ceo-codex-cto-fleet skill for ongoing operations.
 version: 1.0.0
 author: pawel-cell
 license: MIT
@@ -144,6 +144,27 @@ Then tell the user:
 
 > Start a fresh Hermes session — skills load at session start. Then
 > say "use the hermes-ceo-codex-cto-fleet skill" to run your first task.
+
+### Step 5.5: Suggest opening a persistent CEO mission
+
+After the fleet skill is installed and the user is in a fresh session,
+recommend opening a `/goal` so Hermes treats the project as a long-running
+CEO mission, plus a few `/subgoal` criteria so the judge can tell when
+each Codex round is actually done:
+
+```
+/goal Act as CEO. Deliver milestone <X> in <REPO_ROOT> by delegating
+implementation to Codex CTO, reviewing each result against the
+acceptance checklist, and deciding accept/reject.
+
+/subgoal Each Codex report must include all 6 sections (PLAN, CHANGED
+FILES, TESTS RUN, FAILING TESTS, RISKS, NEXT).
+/subgoal Diffs must be proportional to CTO_GOAL — no drive-by refactors.
+/subgoal Hermes must run the 8-item acceptance checklist before accepting.
+```
+
+Full subgoal patterns and pitfalls are documented in the fleet skill.
+Don't drown the install in them here.
 
 ### Step 6: Verification checklist
 
